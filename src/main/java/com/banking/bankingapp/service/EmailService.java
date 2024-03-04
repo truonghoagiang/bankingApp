@@ -28,7 +28,6 @@ public class EmailService implements EmailServiceImp {
             mailMessage.setTo(emailDetails.getRecipient());
             mailMessage.setText(emailDetails.getMessageBody());
             mailMessage.setSubject(emailDetails.getSubject());
-
             javaMailSender.send(mailMessage);
             System.out.println("Mail sent successfully");
         }

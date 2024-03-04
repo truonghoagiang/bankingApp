@@ -18,6 +18,8 @@ public class AccountUtils {
     public static final String INSUFFICIENT_BALANCE_MESSAGE = "Your account is not enough!";
     public static final String ACCOUNT_DEBIT_SUCCESS_CODE = "007";
     public static final String ACCOUNT_DEBIT_SUCCESS_MESSAGE = "Your account has been successfully debited";
+    public static final String TRANSFER_SUCCESSFULL_CODE = "008";
+    public static final String TRANSFER_SUCCESSFULL_MESSAGE = "Successfull Transfer";
 
     public static String generateAccountNumber(){
 
