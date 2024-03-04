@@ -20,20 +20,45 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String firstname;
-    private String lastname;
+
+    @Column(name = "idnumber")
+    private String idnumber;
+
+    @Column(name = "fullname")
+    private String fullname;
+
+    @Column(name = "othername")
     private String othername;
+
+    @Column(name = "gender")
     private String gender;
-    private String address;
-    private String stateOfOrigin;
+
+    @Column(name = "account_number")
     private String accountNumber;
+
+    @Column(name = "account_balance")
     private BigDecimal accountBalance;
-    private String email;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "state_of_origin")
+    private String stateOfOrigin;
+
+    @Column(name = "phonenumber")
     private String phonenumber;
-    private String alternativePhoneNumber;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "status")
     private String status;
+
+    @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @Column(name = "modified_at")
     @UpdateTimestamp
     private LocalDateTime modifiedAt;
 
