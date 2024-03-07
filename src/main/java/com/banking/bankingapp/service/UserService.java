@@ -10,6 +10,7 @@ import com.banking.bankingapp.utils.AccountUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,6 +29,9 @@ public class UserService implements UserServiceImp {
 
     @Autowired
     private TransactionServiceImp transactionServiceImp;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public BankResponse createAccount(UserDTO userDTO) {
@@ -51,6 +55,7 @@ public class UserService implements UserServiceImp {
         user.setAddress(userDTO.getAddress());
         user.setStateOfOrigin(userDTO.getStateOfOrigin());
         user.setEmail(userDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setPhonenumber(userDTO.getPhonenumber());
         user.setStatus("ACTIVE");
         user.setAccountNumber(AccountUtils.generateAccountNumber());
