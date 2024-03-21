@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class CreditDebitRequest {
-    private String accountNumber;
-    private BigDecimal amount;
+public class RefreshTokenDto {
+    private String token;
+    private Instant expiredate;
+    private long iduser;
 }

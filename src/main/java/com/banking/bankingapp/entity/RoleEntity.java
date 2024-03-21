@@ -6,12 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "roles")
-@Entity
+@Entity(name = "roles")
 public class RoleEntity {
 
     @Id
@@ -19,8 +19,9 @@ public class RoleEntity {
     private int id;
 
     @Column(name = "name")
-    private String rolename;
+    private String name;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "roles")
     private List<UserEntity> users;
+
 }

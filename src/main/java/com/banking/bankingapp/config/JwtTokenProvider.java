@@ -1,8 +1,11 @@
 package com.banking.bankingapp.config;
 
+import com.banking.bankingapp.service.UserDetailServiceImp;
+import com.banking.bankingapp.service.UserDetailsImp;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -20,7 +23,8 @@ public class JwtTokenProvider {
     private String secrekey;
 
     @Value("${token.key.expieration}")
-    private Long jwtExpirationDate;
+    private Long jwtExpirationAccessToken;
+
 
     private SecretKey key(){
         byte[] bytes = Decoders.BASE64.decode(secrekey);
@@ -29,8 +33,9 @@ public class JwtTokenProvider {
     public String generateToken(String data){
         //SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secrekey));
         //String username = authentication.getName();
+        //UserDetailsImp userPrincipal = (UserDetailsImp) authentication.getPrincipal();
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
+        Date expireDate = new Date(currentDate.getTime() + jwtExpirationAccessToken);
 
         return Jwts.builder().subject(data).expiration(expireDate).signWith(key()).compact();
 
@@ -61,8 +66,14 @@ public class JwtTokenProvider {
             //SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secrekey));
             Jwts.parser().verifyWith(key()).build().parseSignedClaims(token);
             return true;
-        }catch(ExpiredJwtException | IllegalArgumentException | SignatureException e){
-            throw new RuntimeException(e);
+        }catch(SignatureException e){
+            throw new RuntimeException("Invalid JWT Signature!" + e.getMessage());
+        }catch(ExpiredJwtException e){
+            throw new RuntimeException("JWT Token is expired!" + e.getMessage());
+        }catch(UnsupportedJwtException e){
+            throw new RuntimeException("Invalid JWT is unsupport!" + e.getMessage());
+        }catch(IllegalArgumentException e){
+            throw new RuntimeException("JWT claims String is empty!" + e.getMessage());
         }
 
 

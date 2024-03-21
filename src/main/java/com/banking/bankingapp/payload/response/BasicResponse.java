@@ -1,4 +1,4 @@
-package com.banking.bankingapp.dto;
+package com.banking.bankingapp.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

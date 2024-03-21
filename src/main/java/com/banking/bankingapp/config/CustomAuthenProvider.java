@@ -2,6 +2,8 @@ package com.banking.bankingapp.config;
 
 import com.banking.bankingapp.entity.UserEntity;
 import com.banking.bankingapp.service.Imp.LoginServiceImp;
+import com.sun.security.auth.UserPrincipal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class CustomAuthenProvider implements AuthenticationProvider {
 
     @Autowired
@@ -27,9 +30,10 @@ public class CustomAuthenProvider implements AuthenticationProvider {
         UserEntity user = loginServiceImp.checkLogin(username, password);
         if(user != null){
             List<GrantedAuthority> listRole = new ArrayList<>();
-            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getRolename());
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRoles().getName());
             listRole.add(authority);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("","",listRole);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,"",listRole);
+            log.info("Check token: " + authenticationToken);
             return authenticationToken;
         }
         return null;

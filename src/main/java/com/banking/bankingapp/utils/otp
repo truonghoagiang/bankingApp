@@ -1,0 +1,4 @@
+Email Configuration and Email Service
+Create method to generate a random 4 digit code
+Create method to send the otp
+Create method to check otp validate(Checking correct code, expire time)
