@@ -17,7 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,7 +38,7 @@ public class RefreshTokenService implements RefreshTokenServiceImp {
     private JwtTokenProvider jwtTokenProvider;
 
     @Value("${token.refresh.expieration}")
-    private Long jwtExpierationFreshToken;
+    private Long jwtExpierationRefreshToken;
 
     Logger logger = LoggerFactory.getLogger(RefreshTokenException.class);
 
@@ -49,7 +53,9 @@ public class RefreshTokenService implements RefreshTokenServiceImp {
         RefreshTokenEntity refreshToken = new RefreshTokenEntity();
         refreshToken.setUsers(userRepository.findByEmail(email));
         refreshToken.setToken(UUID.randomUUID().toString());
-        refreshToken.setExpiredate(Instant.now().plusMillis(jwtExpierationFreshToken));
+        refreshToken.setExpiredate(LocalDateTime.now().plusDays(5));
+
+        logger.info("Check expired date: " + refreshToken.getExpiredate());
 
         RefreshTokenEntity savedrefreshToken = refreshTokenRepository.save(refreshToken);
 
@@ -59,7 +65,7 @@ public class RefreshTokenService implements RefreshTokenServiceImp {
 
     @Override
     public RefreshTokenEntity verifyExpiration(RefreshTokenEntity refreshToken) {
-        if(refreshToken.getExpiredate().compareTo(Instant.now()) < 0){
+        if(refreshToken.getExpiredate().compareTo(LocalDateTime.now()) < 0){
             refreshTokenRepository.delete(refreshToken);
             //throw new RefreshTokenException(refreshToken.getToken(),"Refresh Token was expired. Please make a new signin request.");
         }
@@ -69,22 +75,25 @@ public class RefreshTokenService implements RefreshTokenServiceImp {
     public ResponseEntity<?> refreshtoken(RefreshTokenDto request){
         String refreshtokenrequest = request.getToken();
         RefreshTokenResponse response = new RefreshTokenResponse();
-
         RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByToken(refreshtokenrequest);
-        logger.info("Check refresh token: " + refreshTokenEntity);
-        if(refreshTokenEntity != null) {
+        if(refreshTokenEntity != null && request.getExpiredate().isAfter(LocalDateTime.now())){
             Optional<UserEntity> user = userRepository.findById(request.getIduser());
-            String token = jwtTokenProvider.generateToken(user.map(item -> item.getId()).toString());
+            String token = jwtTokenProvider.generateToken(user.map(item -> item.getEmail()).toString());
+
+            RefreshTokenEntity newtoken = new RefreshTokenEntity();
+            newtoken.setToken(UUID.randomUUID().toString());
+            newtoken.setExpiredate(request.getExpiredate());
+            newtoken.setUsers(user.get());
+            refreshTokenRepository.deleteById(request.getId());
+            refreshTokenRepository.save(newtoken);
+
+            response.setMessage("Created new access token and refresh token successfull");
             response.setAccessToken(token);
-            response.setRefreshToken(refreshtokenrequest);
-        }
-        if(request.getExpiredate().isBefore(Instant.now())){
-            response.setAccessToken(null);
-            response.setRefreshToken("Token is expired: " + request.getToken());
-            response.setTokenType(null);
+            response.setRefreshToken(newtoken.getToken());
         }else{
+            response.setMessage("Token is expired or not exists. Please make a new Login request!");
             response.setAccessToken(null);
-            response.setRefreshToken("token is not exists: " + request.getToken());
+            response.setRefreshToken(null);
             response.setTokenType(null);
         }
 

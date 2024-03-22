@@ -123,6 +123,7 @@ public class UserService implements UserServiceImp {
 
         RefreshTokenEntity refreshToken = refreshTokenServiceImp.generateRefreshToken(username);
         RefreshTokenDto refreshTokenDto = new RefreshTokenDto();
+        refreshTokenDto.setId(refreshToken.getId());
         refreshTokenDto.setToken(refreshToken.getToken());
         refreshTokenDto.setExpiredate(refreshToken.getExpiredate());
         refreshTokenDto.setIduser(refreshToken.getUsers().getId());

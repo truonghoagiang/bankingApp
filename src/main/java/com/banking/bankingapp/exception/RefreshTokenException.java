@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class RefreshTokenException extends RuntimeException{
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> handlerException(){
-        RefreshTokenResponse response  =new RefreshTokenResponse();
-        response.setAccessToken(null);
-        response.setTokenType(null);
-        response.setRefreshToken("Token is not exists");
-
-        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<?> handlerException(){
+//        RefreshTokenResponse response  =new RefreshTokenResponse();
+//        response.setAccessToken(null);
+//        response.setTokenType(null);
+//        response.setRefreshToken(null);
+//
+//        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+//    }
 }

@@ -68,7 +68,7 @@ public class SecurityConfig {
         httpSecurity.csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(authorize -> authorize
-                        //.requestMatchers("/api/user/login").permitAll()
+                        //.requestMatchers("/api/user/refreshtoken").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/user/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/banking/**").permitAll()
                         .anyRequest().authenticated());
