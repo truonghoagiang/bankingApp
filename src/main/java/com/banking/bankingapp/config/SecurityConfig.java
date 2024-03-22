@@ -69,7 +69,8 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(authorize -> authorize
                         //.requestMatchers("/api/user/refreshtoken").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/api/user/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/user/login").permitAll()
+                        .requestMatchers(HttpMethod.POST,"api/user/signup").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/api/banking/**").permitAll()
                         .anyRequest().authenticated());
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

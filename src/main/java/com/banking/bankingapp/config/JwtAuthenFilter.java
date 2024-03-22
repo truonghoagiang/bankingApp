@@ -43,18 +43,14 @@ public class JwtAuthenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String jwtToken = jwtparse(request);
-
         try{
             if(jwtToken != null && jwtTokenProvider.validateToken(jwtToken)) {
                 String data = jwtTokenProvider.decodeToken(jwtToken);
-                String username = jwtTokenProvider.getUsername(data);
+                logger.info("Data: " + data);
                 Type listType = new TypeToken<List<SimpleGrantedAuthority>>() {}.getType();
                 List<GrantedAuthority> listRoles = gson.fromJson(data,listType);
-                UserDetails userDetails = userDetailServiceImp.loadUserByUsername(username);
-                logger.info("Check userdetails:" + userDetails);
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, listRoles);
-
+                        new UsernamePasswordAuthenticationToken("", "", listRoles);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }catch (Exception e){

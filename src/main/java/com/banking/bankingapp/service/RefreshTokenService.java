@@ -54,9 +54,6 @@ public class RefreshTokenService implements RefreshTokenServiceImp {
         refreshToken.setUsers(userRepository.findByEmail(email));
         refreshToken.setToken(UUID.randomUUID().toString());
         refreshToken.setExpiredate(LocalDateTime.now().plusDays(5));
-
-        logger.info("Check expired date: " + refreshToken.getExpiredate());
-
         RefreshTokenEntity savedrefreshToken = refreshTokenRepository.save(refreshToken);
 
         return savedrefreshToken;

@@ -116,8 +116,8 @@ public class UserService implements UserServiceImp {
         String password = loginRequest.getPassword();
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = authenticationManager.authenticate(token);
-        logger.info("Check authentication: " + authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        //logger.info("Security Context Holder: " + SecurityContextHolder.getContext());
         String json = gson.toJson(authentication.getAuthorities());
         String jwtToken = jwtTokenProvider.generateToken(json);
 
